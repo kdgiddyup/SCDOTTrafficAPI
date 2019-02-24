@@ -1,4 +1,3 @@
-// scraping tools
 // get html from URLs
 var request = require("request-promise");
 
@@ -48,6 +47,7 @@ module.exports = function(app) {
         })
         .catch(function (err) {
             console.log(err); 
+            res.send(err);
         });
     });
 };
