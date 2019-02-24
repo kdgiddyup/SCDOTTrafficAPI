@@ -6,7 +6,16 @@ const bodyParser = require("body-parser");
 const logger = require("morgan");
 const app = express();
 var cors = require('cors')
-app.use(cors())
+var whitelist = ["http://kellyjdavis.com","https://kellyjdavis.com"];
+app.use(cors({
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}))
 
 const dotenv=require("dotenv");
 dotenv.config();
