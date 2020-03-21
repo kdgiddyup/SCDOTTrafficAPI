@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const logger = require("morgan");
 const app = express();
 var cors = require('cors')
-var whitelist = ["http://kellyjdavis.com","https://kellyjdavis.com"];
+var whitelist = ["http://kellyjdavis.com","https://kellyjdavis.com", "https://www.kellyjdavis.com", "http://www.kellyjdavis.com"];
 app.use(cors({
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
