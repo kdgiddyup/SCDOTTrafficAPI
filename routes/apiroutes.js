@@ -32,6 +32,7 @@ module.exports = function(app) {
                 speedDir2:[],
                 dirNames:[]
             };
+            console.log("table:", $("#tableContainer"));
             data.dirNames[0] = $("#tableContainer thead th .channel").eq(0).text();
             data.dirNames[1] = $("#tableContainer thead th .channel").eq(1).text()
 
