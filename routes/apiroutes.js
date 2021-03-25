@@ -16,9 +16,8 @@ module.exports = function(app) {
         let year = now.getFullYear();
         let month = now.getMonth();
         let date = now.getDate();
-        let idLength = req.params.id.toString().length;
         let options = {
-            uri: `${stationPage}${idLength === 1 ? `000${req.params.id}` : idLength === 2 ? `00${req.params.id}` : idLength === 3 ? `0${req.params.id}` : req.params.id}&reportdate=${year}-${month < 10 ? `0${month + 1}` : month + 1}-${date < 10 ? `0${date}` : date}`,
+            uri: `${stationPage}${req.params.id}&reportdate=${year}-${month < 10 ? `0${month + 1}` : month + 1}-${date < 10 ? `0${date}` : date}`,
             transform: function (body) {
             return cheerio.load(body);
             }
