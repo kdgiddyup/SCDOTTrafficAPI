@@ -36,6 +36,8 @@ module.exports = function(app) {
             data.dirNames[0] = $("#tableContainer thead th .channel").eq(0).text();
             data.dirNames[1] = $("#tableContainer thead th .channel").eq(1).text()
 
+            console.log(data)
+
             // push rows of class .rowWhiteDisplay and .rowNormalDisplay into data array
             $("#tableContainer tbody tr").each( (rowIndex,row) => {
                 data.actualDir1[rowIndex] = $(row).children("td").eq(1).html();
