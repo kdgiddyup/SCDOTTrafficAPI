@@ -2,7 +2,7 @@ const puppeteer = require("puppeteer");
 // https://www.npmjs.com/package/puppeteer
 
 (async ()=>{
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
 })();
 // launch headless chromium
@@ -55,7 +55,7 @@ module.exports = function(app) {
             console.log(data)
             await browser.close();
             // clean up
-            
+
             res.status(200).set("Access-Control-Allow-Origin","*").json( data );
         }
         catch(err) {
