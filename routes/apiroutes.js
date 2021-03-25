@@ -33,8 +33,8 @@ module.exports = function(app) {
                 dirNames:[]
             };
             console.log("table:", $("#tableContainer"));
-            data.dirNames[0] = $("#tableContainer thead th .channel").eq(0).text();
-            data.dirNames[1] = $("#tableContainer thead th .channel").eq(1).text()
+            data.dirNames[0] = $("#tableContainer").children("th").eq(0).text();
+            data.dirNames[1] = $("#tableContainer").children("th").eq(1).text();
 
             console.log(data)
 
