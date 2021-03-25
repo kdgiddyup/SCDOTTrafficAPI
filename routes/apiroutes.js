@@ -43,11 +43,11 @@ module.exports = function(app) {
                 data.speedDir2[rowIndex] = $(row).children("td").eq(6).html();
             });
             
-            res.json( data );
+            res.status(200).set("Access-Control-Allow-Origin","*").json( data );
         })
         .catch(function (err) {
             console.log(err); 
-            res.send(err);
+            res.set("Access-Control-Allow-Origin","*").send(err);
         });
     });
 };
