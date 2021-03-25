@@ -1,58 +1,66 @@
-// get html from URLs
-var request = require("request-promise");
+const puppeteer = require("puppeteer");
+// https://www.npmjs.com/package/puppeteer
 
-// Scrapes our HTML
-var cheerio = require("cheerio");
+(async ()=>{
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+})();
+// launch headless chromium
 
-// this will change depending on environment
 var stationPage = "https://scdottrafficdata.drakewell.com/sitemonitor.asp?node=SCDOT_CCS&cosit=00000000";
 
 module.exports = function(app) {
 
     // get request to retrieve site table rows
     // todo: parse and format row data before returning to front-end
-    app.get("/api/tables/:id", function(req, res) {
+    app.get("/api/tables/:id", async function(req, res) {
         let now = new Date();
         let year = now.getFullYear();
         let month = now.getMonth();
         let date = now.getDate();
-        let options = {
-            uri: `${stationPage}${req.params.id}&reportdate=${year}-${month < 10 ? `0${month + 1}` : month + 1}-${date < 10 ? `0${date}` : date}`,
-            transform: function (body) {
-            return cheerio.load(body);
-            }
-        };
-        request(options).then(function ($) {
-            let data ={ 
-                actualDir1:[],
-                histDir1:[],
-                speedDir1:[],
-                actualDir2:[],
-                histDir2:[],
-                speedDir2:[],
-                dirNames:[]
-            };
-            console.log("table:", $("#tableContainer"));
-            data.dirNames[0] = $("#tableContainer").children("th").eq(0).text();
-            data.dirNames[1] = $("#tableContainer").children("th").eq(1).text();
-
-            console.log(data)
-
-            // push rows of class .rowWhiteDisplay and .rowNormalDisplay into data array
-            $("#tableContainer tbody tr").each( (rowIndex,row) => {
-                data.actualDir1[rowIndex] = $(row).children("td").eq(1).html();
-                data.histDir1[rowIndex] = $(row).children("td").eq(2).html();
-                data.speedDir1[rowIndex] = $(row).children("td").eq(3).html();
-                data.actualDir2[rowIndex] = $(row).children("td").eq(5).html();
-                data.histDir2[rowIndex] = $(row).children("td").eq(6).html();
-                data.speedDir2[rowIndex] = $(row).children("td").eq(7).html();
-            });
-            
-            res.status(200).set("Access-Control-Allow-Origin","*").json( data );
-        })
-        .catch(function (err) {
+        
+        try {
+            await page.goto(`${stationPage}${req.params.id}&reportdate=${year}-${month < 10 ? `0${month + 1}` : month + 1}-${date < 10 ? `0${date}` : date}`)
+        // navigate to requested page
+        }
+        catch(err){
             console.log(err); 
             res.set("Access-Control-Allow-Origin","*").send(err);
-        });
+        }
+
+        try {
+            let data;
+            await page.evaluate( ()=>{
+                let table = document.getElementById("tableContainer").getElementsByTagName("table")[0];
+                let rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+                data = { 
+                    actualDir1:[],
+                    histDir1:[],
+                    speedDir1:[],
+                    actualDir2:[],
+                    histDir2:[],
+                    speedDir2:[],
+                    dirNames: [table.getElementsByTagName("th")[1].textContent, table.getElementsByTagName("th")[2].textContent]
+                }
+                for (let i=0; i<rows.length; i++){
+                    data.actualDir1.push(row.getElementsByTagName("td")[1]);
+                    data.histDir1.push(row.getElementsByTagName("td")[2]);
+                    data.speedDir1.push(row.getElementsByTagName("td")[3]);
+                    data.actualDir2.push(row.getElementsByTagName("td")[5]);
+                    data.histDir2.push(row.getElementsByTagName("td")[6]);
+                    data.speedDir2.push(row.getElementsByTagName("td")[7]);
+                }
+                
+            });
+            console.log(data)
+            await browser.close();
+            // clean up
+            
+            res.status(200).set("Access-Control-Allow-Origin","*").json( data );
+        }
+        catch(err) {
+            console.log(err); 
+            res.set("Access-Control-Allow-Origin","*").send(err);
+        };
     });
 };
