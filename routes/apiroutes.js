@@ -3,7 +3,6 @@ var request = require("request-promise");
 
 // Scrapes our HTML
 var cheerio = require("cheerio");
-var axios = require("axios");
 
 // this will change depending on environment
 var stationPage = "https://scdottrafficdata.drakewell.com/sitemonitor.asp?node=SCDOT_CCS&cosit=00000000";
@@ -55,4 +54,3 @@ module.exports = function(app) {
         });
     });
 };
-
