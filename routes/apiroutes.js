@@ -39,12 +39,12 @@ module.exports = function(app) {
                     dirNames: [table.getElementsByTagName("th")[1].textContent, table.getElementsByTagName("th")[2].textContent]
                 }
                 for (let i=0; i<rows.length; i++){
-                    data.actualDir1.push(row[i].getElementsByTagName("td")[1]);
-                    data.histDir1.push(row[i].getElementsByTagName("td")[2]);
-                    data.speedDir1.push(row[i].getElementsByTagName("td")[3]);
-                    data.actualDir2.push(row[i].getElementsByTagName("td")[5]);
-                    data.histDir2.push(row[i].getElementsByTagName("td")[6]);
-                    data.speedDir2.push(row[i].getElementsByTagName("td")[7]);
+                    data.actualDir1.push(rows[i].getElementsByTagName("td")[1]);
+                    data.histDir1.push(rows[i].getElementsByTagName("td")[2]);
+                    data.speedDir1.push(rows[i].getElementsByTagName("td")[3]);
+                    data.actualDir2.push(rows[i].getElementsByTagName("td")[5]);
+                    data.histDir2.push(rows[i].getElementsByTagName("td")[6]);
+                    data.speedDir2.push(rows[i].getElementsByTagName("td")[7]);
                 }
                 
             });
