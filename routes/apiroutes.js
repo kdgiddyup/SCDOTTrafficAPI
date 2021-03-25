@@ -30,6 +30,7 @@ module.exports = function (app) {
                         speedDir2: []
                     };
                     const headRows = document.querySelectorAll("#tableContainer thead th");
+                    return headRows;
                     console.log(headRows);
                     const bodyRows = document.querySelectorAll("#tableContainer tbody tr");
                     console.log(bodyRows)
@@ -46,8 +47,8 @@ module.exports = function (app) {
                         _data.speedDir2.push(cells[7].textContent);
                     }
 
-                    console.log(data)
-
+                    console.log(_data)
+                    return _data;
                 });
                 await browser.close();
                 // clean up
