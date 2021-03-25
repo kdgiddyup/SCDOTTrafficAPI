@@ -1,19 +1,15 @@
 const puppeteer = require("puppeteer");
 // https://www.npmjs.com/package/puppeteer
 
-(async ()=>{
-    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
-    const page = await browser.newPage();
-})();
-// launch headless chromium
-
-var stationPage = "https://scdottrafficdata.drakewell.com/sitemonitor.asp?node=SCDOT_CCS&cosit=00000000";
+const stationPage = "https://scdottrafficdata.drakewell.com/sitemonitor.asp?node=SCDOT_CCS&cosit=00000000";
 
 module.exports = function(app) {
 
     // get request to retrieve site table rows
     // todo: parse and format row data before returning to front-end
     app.get("/api/tables/:id", async function(req, res) {
+        const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+        const page = await browser.newPage();
         let now = new Date();
         let year = now.getFullYear();
         let month = now.getMonth();
