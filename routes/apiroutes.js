@@ -16,42 +16,41 @@ module.exports = function (app) {
         let date = now.getDate();
 
         try {
-            await page.goto(`${stationPage}${req.params.id}&reportdate=${year}-${month < 10 ? `0${month + 1}` : month + 1}-${date < 10 ? `0${date}` : date}`);
+            await page.goto(`${stationPage}${req.params.id}&reportdate=${year}-${month < 10 ? `0${month + 1}` : month + 1}-${date < 10 ? `0${date}` : date}`, {
+    waitUntil: 'networkidle2',
+  });
             // navigate to requested page
 
             try {
                 const data = await page.evaluate(() => {
-                    const _data = {
-                        actualDir1: [],
-                        histDir1: [],
-                        speedDir1: [],
-                        actualDir2: [],
-                        histDir2: [],
-                        speedDir2: []
-                    };
-                    const headRows = document.querySelectorAll("#tableContainer thead th");
-                    return headRows;
-                    console.log(headRows);
-                    const bodyRows = document.querySelectorAll("#tableContainer tbody tr");
-                    console.log(bodyRows)
-
-                    _data.dirNames = [headRows[1].textContent, headRows[2].textContent];
-
-                    for (let i = 0; i < bodyRows.length; i++) {
-                        let cells = bodyRows[i].getElementsByTagName("td");
-                        _data.actualDir1.push(cells[1].textContent);
-                        _data.histDir1.push(cells[2].textContent);
-                        _data.speedDir1.push(cells[3].textContent);
-                        _data.actualDir2.push(cells[5].textContent);
-                        _data.histDir2.push(cells[6].textContent);
-                        _data.speedDir2.push(cells[7].textContent);
-                    }
-
-                    console.log(_data)
-                    return _data;
+                    return new Promise(resolve=>{
+                        const data = {
+                            actualDir1: [],
+                            histDir1: [],
+                            speedDir1: [],
+                            actualDir2: [],
+                            histDir2: [],
+                            speedDir2: []
+                        };
+                        const headCells = document.querySelectorAll("#tableContainer thead th");
+                        data.dirNames = [headCells[1].textContent, headCells[2].textContent];
+                        
+                        const bodyRows = document.querySelectorAll("#tableContainer tbody tr");
+                        for (let i = 0; i < bodyRows.length; i++) {
+                            let cells = bodyRows[i].getElementsByTagName("td");
+                            data.actualDir1.push(parseInt(cells[1].textContent));
+                            data.histDir1.push(parseInt(cells[2].textContent));
+                            data.speedDir1.push(parseInt(cells[3].textContent));
+                            data.actualDir2.push(parseInt(cells[5].textContent));
+                            data.histDir2.push(parseInt(cells[6].textContent));
+                            data.speedDir2.push(parseInt(cells[7].textContent));
+                        }
+                        resolve(data);
+                    })
                 });
                 await browser.close();
                 // clean up
+                
                 res.status(200).set("Access-Control-Allow-Origin", "*").json(data);
             }
             catch (err) {
